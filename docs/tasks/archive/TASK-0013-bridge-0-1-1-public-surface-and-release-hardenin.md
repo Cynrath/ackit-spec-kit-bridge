@@ -1,11 +1,11 @@
 ---
 id: "TASK-0013"
 title: "Bridge 0.1.1 public-surface and release hardening"
-status: active
+status: completed
 schemaVersion: 2
 dependencies: []
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 ## Purpose
@@ -65,8 +65,8 @@ new README.
 - [x] package.json metadata correct; tarball clean (no dist/src dup)
 - [x] release.yml OIDC direct-publish, no tokens, version-absence gate
 - [x] local suite green (43/43) + smokes + ACKit gates
-- [ ] PR merged to main with green CI
-- [ ] v0.1.1 tag → release green → npm 0.1.1 latest → GitHub Release
+- [x] PR merged to main with green CI
+- [x] v0.1.1 tag → release green → npm 0.1.1 latest → GitHub Release
 
 ## Test steps
 
@@ -92,4 +92,14 @@ forward with a new patch only if needed.
 
 ## Completion notes
 
-Implementation done locally; evidence pending PR/CI/tag/release verification.
+Done. PR #8 squash 4259ebe (main CI green); tag v0.1.1 → 4259ebe.
+Release path: initial tag run failed closed on runner npm 10 (fixed: npm@11
+pin, PR #9); dispatch failed on missing specify/ackit for full tests
+(fixed: e2e CLI install, PR #10); publish hit npm relative-path-as-git-spec
+(fixed: absolute tarball path, PR #11); verify needed longer replication
+patience + narrow resume (PR #12); gh-release needed explicit tag_name on
+dispatch (PR #13). Final dispatch run 37010612196 green (RESUME=true):
+OIDC `npm publish --provenance` (SLSA attested), latest=0.1.1,
+fresh-consumer 0.1.1 ok, GitHub Release v0.1.1 + 4 assets SHA-verified.
+Repo description/homepage/topics set. Direct `npm publish` via OIDC works:
+future normal releases need no manual npm approval.
