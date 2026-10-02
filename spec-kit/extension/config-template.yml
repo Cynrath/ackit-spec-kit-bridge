@@ -1,0 +1,6 @@
+# Default configuration for the ACKit bridge Spec Kit extension.
+# Copy to .specify/extensions/ackit/ackit-config.yml to customize per project.
+bridgeCommand: ackit-speckit
+defaultProfile: standard
+autoSync: true
+verifyAfterImplement: true

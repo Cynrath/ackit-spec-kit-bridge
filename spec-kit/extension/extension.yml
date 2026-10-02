@@ -1,0 +1,81 @@
+schema_version: "1.0"
+
+extension:
+  id: "ackit"
+  name: "ACKit Bridge"
+  version: "0.1.0"
+  description: "Bridge GitHub Spec Kit artifacts into ACKit tasks, evidence, verification gates, and handoffs."
+  author: "Cynrath"
+  repository: "https://github.com/Cynrath/ackit-spec-kit-bridge"
+  license: "MIT"
+  homepage: "https://github.com/Cynrath/ackit-spec-kit-bridge"
+
+requires:
+  speckit_version: ">=1.0.0"
+
+provides:
+  commands:
+    - name: "speckit.ackit.sync"
+      file: "commands/sync.md"
+      description: "Sync the active Spec Kit feature into the ACKit task lifecycle"
+    - name: "speckit.ackit.status"
+      file: "commands/status.md"
+      description: "Show the canonical ACKit bridge lifecycle status"
+    - name: "speckit.ackit.verify"
+      file: "commands/verify.md"
+      description: "Run state-bound verification and record a verdict"
+    - name: "speckit.ackit.gate"
+      file: "commands/gate.md"
+      description: "Check the completion gate (read-only)"
+    - name: "speckit.ackit.checkpoint"
+      file: "commands/checkpoint.md"
+      description: "Create a deterministic resume checkpoint"
+    - name: "speckit.ackit.handoff"
+      file: "commands/handoff.md"
+      description: "Create a human/agent-readable handoff"
+    - name: "speckit.ackit.complete"
+      file: "commands/complete.md"
+      description: "Complete via the safe gate-checked path"
+  config:
+    - name: "ackit-config.yml"
+      template: "config-template.yml"
+      description: "ACKit bridge extension configuration"
+      required: false
+
+hooks:
+  after_specify:
+    command: "speckit.ackit.sync"
+    optional: true
+    prompt: "Sync the new spec into ACKit?"
+    description: "Sync Spec Kit feature state into the ACKit task lifecycle"
+  after_plan:
+    command: "speckit.ackit.sync"
+    optional: true
+    prompt: "Sync the plan into ACKit?"
+    description: "Sync Spec Kit feature state into the ACKit task lifecycle"
+  after_tasks:
+    command: "speckit.ackit.sync"
+    optional: true
+    prompt: "Sync tasks into ACKit?"
+    description: "Sync Spec Kit feature state into the ACKit task lifecycle"
+  before_implement:
+    command: "speckit.ackit.status"
+    optional: true
+    prompt: "Check ACKit bridge status before implementing?"
+    description: "Read-only preflight of lifecycle state before implementation"
+  after_implement:
+    command: "speckit.ackit.verify"
+    optional: true
+    prompt: "Run ACKit verification after implementing?"
+    description: "State-bound verification after implementation (never auto-completes)"
+
+tags:
+  - "ackit"
+  - "verification"
+  - "sdd"
+  - "governance"
+  - "handoff"
+
+defaults:
+  bridgeCommand: "ackit-speckit"
+  defaultProfile: "standard"
