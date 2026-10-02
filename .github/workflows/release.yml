@@ -182,7 +182,9 @@ jobs:
       - name: Publish to npm via OIDC Trusted Publishing (no token)
         run: |
           set -euo pipefail
-          npm publish "dist-release/${TARBALL}" --access public --provenance
+          # Absolute path: a bare relative tarball path is misparsed by npm
+          # as a git spec (ssh ls-remote). Never publish a re-resolved spec.
+          npm publish "${PWD}/dist-release/${TARBALL}" --access public --provenance
 
       - name: Verify npm registry + fresh consumer
         run: |
