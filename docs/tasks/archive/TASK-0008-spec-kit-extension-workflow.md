@@ -1,12 +1,12 @@
 ---
 id: "TASK-0008"
 title: "Spec Kit extension + workflow"
-status: pending
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
@@ -32,8 +32,8 @@ Implement: Spec Kit extension + workflow.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: ackit extension (7 commands/5 hooks, installs --dev + packaged zip) + ackit-verified-sdd workflow.
 
 Dependencies: TASK-0001

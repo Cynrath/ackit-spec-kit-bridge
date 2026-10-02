@@ -1,12 +1,12 @@
 ---
 id: "TASK-0006"
 title: "Trust: digest/verify/gate/complete"
-status: pending
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
@@ -32,8 +32,8 @@ Implement: Trust: digest/verify/gate/complete.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: subject/evidence digests, quick/standard/high-risk verifier, gate, safe complete. STALE proven.
 
 Dependencies: TASK-0001

@@ -1,18 +1,18 @@
 ---
-id: "TASK-0009"
-title: "Security + tests/E2E"
-status: pending
+id: "TASK-0005"
+title: "Lifecycle: sync/status/explain"
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
 ## Purpose
 
-Implement: Security + tests/E2E.
+Implement: Lifecycle: sync/status/explain.
 
 ## Scope
 
@@ -32,8 +32,8 @@ Implement: Security + tests/E2E.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: mapping store, deriveLifecycle (11 states), sync/status/explain, idempotent re-runs.
 
 Dependencies: TASK-0001

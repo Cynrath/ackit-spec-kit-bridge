@@ -1,18 +1,18 @@
 ---
-id: "TASK-0002"
-title: "Bootstrap repo + dogfood init"
-status: pending
+id: "TASK-0009"
+title: "Security + tests/E2E"
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
 ## Purpose
 
-Implement: Bootstrap repo + dogfood init.
+Implement: Security + tests/E2E.
 
 ## Scope
 
@@ -32,8 +32,8 @@ Implement: Bootstrap repo + dogfood init.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: 40 unit + 7 security tests, integration + E2E green Windows+Ubuntu, package/extension smoke.
 
 Dependencies: TASK-0001

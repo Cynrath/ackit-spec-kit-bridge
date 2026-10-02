@@ -1,12 +1,12 @@
 ---
 id: "TASK-0003"
 title: "Contracts: config/schemas/exit-codes"
-status: pending
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
@@ -32,8 +32,8 @@ Implement: Contracts: config/schemas/exit-codes.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: config schema/loader, 6 JSON schemas, exit codes 0-5, compat matrix. Unit-tested.
 
 Dependencies: TASK-0001

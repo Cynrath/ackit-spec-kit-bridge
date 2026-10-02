@@ -1,18 +1,18 @@
 ---
-id: "TASK-0010"
-title: "Docs + CI/community"
-status: pending
+id: "TASK-0007"
+title: "Continuity: checkpoint/handoff"
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
 ## Purpose
 
-Implement: Docs + CI/community.
+Implement: Continuity: checkpoint/handoff.
 
 ## Scope
 
@@ -32,8 +32,8 @@ Implement: Docs + CI/community.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: deterministic checkpoints + Markdown/JSON handoffs, secret-free, schema-validated.
 
 Dependencies: TASK-0001

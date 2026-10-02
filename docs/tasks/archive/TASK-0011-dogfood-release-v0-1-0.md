@@ -1,18 +1,18 @@
 ---
-id: "TASK-0005"
-title: "Lifecycle: sync/status/explain"
-status: pending
+id: "TASK-0011"
+title: "Dogfood + release v0.1.0"
+status: completed
 schemaVersion: 2
 dependencies:
   - "TASK-0001"
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-10-02
 ---
 
 
 ## Purpose
 
-Implement: Lifecycle: sync/status/explain.
+Implement: Dogfood + release v0.1.0.
 
 ## Scope
 
@@ -32,8 +32,8 @@ Implement: Lifecycle: sync/status/explain.
 
 ## Acceptance criteria
 
-- [ ] Implementation matches scope.
-- [ ] Test plan executed with pass counts recorded.
+- [x] Implementation matches scope.
+- [x] Test plan executed with pass counts recorded.
 
 ## Test steps
 
@@ -49,6 +49,6 @@ Focused commit revert.
 
 ## Completion notes
 
-(placeholder)
+Done: dogfood verify PASS, 19-step clean-room demo COMPLETE, v0.1.0 released with 4 artifacts.
 
 Dependencies: TASK-0001
