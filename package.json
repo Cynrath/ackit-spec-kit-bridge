@@ -1,0 +1,80 @@
+{
+  "name": "@cynrath/ackit-spec-kit-bridge",
+  "version": "0.1.0",
+  "description": "Community integration for ACKit and GitHub Spec Kit. Bridges Spec Kit intent artifacts into ACKit tasks, evidence, verification gates, and handoffs.",
+  "keywords": [
+    "ackit",
+    "agent-context-kit",
+    "spec-kit",
+    "spec-driven-development",
+    "ai-agents",
+    "verification",
+    "developer-tools",
+    "cli",
+    "typescript",
+    "sdd"
+  ],
+  "homepage": "https://github.com/Cynrath/ackit-spec-kit-bridge",
+  "bugs": {
+    "url": "https://github.com/Cynrath/ackit-spec-kit-bridge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cynrath/ackit-spec-kit-bridge.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "ackit-speckit": "./dist/cli/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "spec-kit",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome check src tests scripts schemas spec-kit",
+    "format:check": "biome format src tests scripts schemas spec-kit",
+    "format": "biome format --write src tests scripts schemas spec-kit",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
+    "smoke:cli": "node scripts/cli-smoke.mjs",
+    "smoke:package": "node scripts/package-smoke.mjs",
+    "smoke:extension": "node scripts/extension-smoke.mjs",
+    "check:text-hygiene": "node scripts/check-text-hygiene.mjs --repo",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
+    "@types/node": "^24.10.9",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}

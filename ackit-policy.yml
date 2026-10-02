@@ -1,0 +1,17 @@
+# Repository security policy (dogfood).
+schemaVersion: 1
+thresholds:
+  severity: medium
+suppressions:
+  # Security-boundary tests intentionally embed credential-shaped literals and
+  # synthetic private-key blocks to prove redaction; they are not real secrets.
+  - ruleId: ACKIT002
+    pathGlobs: ["tests/security/**", "tests/unit/**"]
+    reason: "synthetic private-key/redaction fixtures used by security tests"
+    expiresAt: 2027-10-02
+  # Gate domain language: `pass` (gate PASS/FAIL) trips credential-assignment
+  # heuristics but carries no secret value.
+  - ruleId: ACKIT003
+    pathGlobs: ["src/verification/gate.ts", "src/cli/index.ts"]
+    reason: "gate pass/fail domain language, not credentials"
+    expiresAt: 2027-10-02

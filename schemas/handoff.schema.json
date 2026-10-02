@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cynrath/ackit-spec-kit-bridge/schemas/handoff.schema.json",
+  "title": "Agent/human handoff",
+  "type": "object",
+  "required": ["schema", "schemaVersion", "createdAt", "lifecycleState", "nextActions"],
+  "properties": {
+    "schema": { "const": "ackit.speckit.handoff.v1" },
+    "schemaVersion": { "const": 1 },
+    "createdAt": { "type": "string" },
+    "goal": { "type": "string" },
+    "lifecycleState": { "type": "string" },
+    "feature": { "type": ["string", "null"] },
+    "ackitTask": { "type": ["string", "null"] },
+    "complete": { "type": "array", "items": { "type": "string" } },
+    "incomplete": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "nextActions": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

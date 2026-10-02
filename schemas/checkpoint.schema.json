@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cynrath/ackit-spec-kit-bridge/schemas/checkpoint.schema.json",
+  "title": "Deterministic checkpoint",
+  "type": "object",
+  "required": ["schema", "schemaVersion", "id", "createdAt", "lifecycleState", "subjectDigest"],
+  "properties": {
+    "schema": { "const": "ackit.speckit.checkpoint.v1" },
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "feature": { "type": ["string", "null"] },
+    "ackitTask": { "type": ["string", "null"] },
+    "lifecycleState": { "type": "string" },
+    "gitHead": { "type": ["string", "null"] },
+    "subjectDigest": { "type": ["string", "null"] },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "nextCommands": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

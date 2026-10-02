@@ -1,0 +1,8 @@
+# Root ACKit configuration for this repository.
+schemaVersion: 1
+scan:
+  severityThreshold: medium
+
+policy:
+  extends:
+    - ackit-policy.yml

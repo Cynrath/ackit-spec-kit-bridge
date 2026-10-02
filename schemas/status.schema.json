@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cynrath/ackit-spec-kit-bridge/schemas/status.schema.json",
+  "title": "Canonical lifecycle status",
+  "type": "object",
+  "required": ["schema", "version", "data"],
+  "properties": {
+    "schema": { "const": "ackit.speckit.status.v1" },
+    "version": { "const": 1 },
+    "data": {
+      "type": "object",
+      "required": ["lifecycle", "reasonCodes", "subjectDigest"],
+      "properties": {
+        "lifecycle": {
+          "enum": ["UNINITIALIZED", "READY", "SPECIFIED", "PLANNED", "TASKED", "IMPLEMENTING", "VERIFYING", "VERIFIED", "STALE", "BLOCKED", "COMPLETE"]
+        },
+        "reasonCodes": { "type": "array", "items": { "type": "string" } },
+        "feature": { "type": ["string", "null"] },
+        "ackitTask": { "type": ["string", "null"] },
+        "subjectDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

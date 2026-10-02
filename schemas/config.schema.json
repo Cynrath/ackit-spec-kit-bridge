@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cynrath/ackit-spec-kit-bridge/schemas/config.schema.json",
+  "title": "Bridge configuration",
+  "type": "object",
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "ackit": {
+      "type": "object",
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "minVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      },
+      "additionalProperties": false
+    },
+    "specKit": {
+      "type": "object",
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "minVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      },
+      "additionalProperties": false
+    },
+    "mapping": {
+      "type": "object",
+      "properties": { "mode": { "const": "active-feature" } },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "defaultProfile": { "enum": ["quick", "standard", "high-risk"] },
+        "stalePolicy": { "const": "fail" }
+      },
+      "additionalProperties": false
+    },
+    "profiles": { "type": "object" },
+    "evidence": {
+      "type": "object",
+      "properties": { "redact": { "type": "boolean" } },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

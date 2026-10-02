@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cynrath/ackit-spec-kit-bridge/schemas/verdict.schema.json",
+  "title": "State-bound verification verdict",
+  "type": "object",
+  "required": ["schema", "schemaVersion", "result", "profile", "subjectDigest", "evidenceDigest"],
+  "properties": {
+    "schema": { "const": "ackit.speckit.verdict.v1" },
+    "schemaVersion": { "const": 1 },
+    "result": { "enum": ["PASS", "FAIL", "BLOCKED"] },
+    "profile": { "enum": ["quick", "standard", "high-risk"] },
+    "subjectDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "evidenceDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "feature": { "type": ["string", "null"] },
+    "ackitTask": { "type": ["string", "null"] },
+    "reasonCodes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
