@@ -3,9 +3,10 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveSpecify } from "../helpers/cli-paths.js";
 
 const CLI = join(process.cwd(), "dist", "cli", "index.js");
-const SPECIFY = "C:\\Users\\gizem\\.local\\bin\\specify.exe";
+const SPECIFY = resolveSpecify();
 
 function sh(cmd: string, args: string[], cwd: string): string {
   return execFileSync(cmd, args, { cwd, encoding: "utf8", timeout: 120_000 });

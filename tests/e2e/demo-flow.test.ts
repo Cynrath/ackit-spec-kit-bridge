@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveSpecify } from "../helpers/cli-paths.js";
 
 const CLI = join(process.cwd(), "dist", "cli", "index.js");
 
@@ -19,7 +20,7 @@ describe("bridge e2e demo flow (quick profile)", () => {
       "# TASK-0001 e2e\nstatus: in-progress\n",
     );
     execFileSync(
-      "C:\\Users\\gizem\\.local\\bin\\specify.exe",
+      resolveSpecify(),
       [
         "init",
         "--here",

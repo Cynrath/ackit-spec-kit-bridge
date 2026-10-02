@@ -2,6 +2,7 @@ node_modules/
 dist/
 coverage/
 *.tgz
+temp-pack/
 .ackit/
 artifacts/
 temp/

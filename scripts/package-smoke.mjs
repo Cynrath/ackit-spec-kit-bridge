@@ -15,9 +15,15 @@ if (files.length === 0) throw new Error("no tarball produced");
 const tarball = join(process.cwd(), "temp-pack", files[0]);
 console.log(`tarball: ${tarball}`);
 const dir = mkdtempSync(join(tmpdir(), "bridge-pkg-smoke-"));
-execFileSync("npm", ["install", "-g", tarball, "--prefix", join(dir, "prefix")], {
-  timeout: 180_000,
-});
+// npm is a .cmd shim on Windows; spawn it through cmd.exe there.
+const npmCmd = process.platform === "win32" ? ["cmd.exe", "/d", "/s", "/c", "npm"] : ["npm"];
+execFileSync(
+  npmCmd[0],
+  [...npmCmd.slice(1), "install", "-g", tarball, "--prefix", join(dir, "prefix")],
+  {
+    timeout: 180_000,
+  },
+);
 const bin = join(dir, "prefix", "ackit-speckit");
 const binWin = `${bin}.cmd`;
 const cli = existsSync(binWin)

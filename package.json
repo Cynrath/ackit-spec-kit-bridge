@@ -57,7 +57,7 @@
     "format:check": "biome format src tests scripts schemas spec-kit",
     "format": "biome format --write src tests scripts schemas spec-kit",
     "test": "vitest run",
-    "test:unit": "vitest run tests/unit",
+    "test:unit": "vitest run tests/unit tests/security",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "vitest run tests/e2e",
     "smoke:cli": "node scripts/cli-smoke.mjs",

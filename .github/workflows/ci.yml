@@ -42,8 +42,8 @@ jobs:
         run: pnpm typecheck
       - name: Build
         run: pnpm build
-      - name: Unit + security tests
-        run: pnpm test
+      - name: Unit + security tests (no external CLIs)
+        run: pnpm test:unit
       - name: CLI smoke
         run: pnpm smoke:cli
       - name: Extension smoke
@@ -71,8 +71,7 @@ jobs:
           python-version: "3.11"
       - name: Install uv + specify + ackit
         run: |
-          pip install uv
-          uv tool install specify-cli
+          pip install uv specify-cli
           npm install -g @cynrath/agent-context-kit
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
