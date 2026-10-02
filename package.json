@@ -30,7 +30,7 @@
     "node": ">=22"
   },
   "bin": {
-    "ackit-speckit": "./dist/cli/index.js"
+    "ackit-speckit": "dist/cli/index.js"
   },
   "types": "./dist/index.d.ts",
   "exports": {
