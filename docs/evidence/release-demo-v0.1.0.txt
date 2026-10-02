@@ -1,7 +1,7 @@
 demo=<demo-dir>
 === 1 git init ===
 $ git init -b main [cwd=<demo-dir>]
-Initialized empty Git repository in C:/Users/gizem/AppData/Local/Temp/bridge-demo-c4d3e2fb/.git/
+Initialized empty Git repository in <demo-dir>/.git/
 
 exit=0
 $ git config user.email demo@example.com [cwd=<demo-dir>]

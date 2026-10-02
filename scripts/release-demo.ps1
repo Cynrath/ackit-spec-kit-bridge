@@ -171,5 +171,8 @@ $txt = Get-Content $log -Raw
 $txt = $txt -replace [regex]::Escape($demo), "<demo-dir>"
 $txt = $txt -replace [regex]::Escape($bridge), "<bridge-repo>"
 $txt = $txt -replace "C:\\Users\\[^\\\s]+", "<user-home>"
+$txt = $txt -replace "C:/Users/[^/\s]+", "<user-home>"
+$txt = $txt -replace [regex]::Escape($demo.Replace("\", "/")), "<demo-dir>"
+$txt = $txt -replace [regex]::Escape($bridge.Replace("\", "/")), "<bridge-repo>"
 $txt | Out-File (Join-Path $evidenceDir "release-demo-v0.1.0.txt") -Encoding utf8 -NoNewline
 Write-Host "transcript preserved (sanitized)"
