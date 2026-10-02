@@ -1,6 +1,6 @@
 import { normalizeVersion, satisfiesMinimum } from "./util/versions.js";
 
-export const BRIDGE_VERSION = "0.1.0";
+export const BRIDGE_VERSION = "0.1.1";
 export const COMPAT = {
   node: ">=22",
   ackit: { min: "0.5.0", tested: ["0.5.4"] as string[] },

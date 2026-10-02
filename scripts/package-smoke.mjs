@@ -1,5 +1,5 @@
 import { execFileSync, execSync } from "node:child_process";
-import { existsSync, mkdtempSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -10,9 +10,13 @@ const out = execSync("pnpm pack --pack-destination temp-pack", {
 });
 console.log(out);
 const { readdirSync } = await import("node:fs");
+const pkgPre = JSON.parse(readFileSync("package.json", "utf8"));
 const files = readdirSync("temp-pack").filter((f) => f.endsWith(".tgz"));
 if (files.length === 0) throw new Error("no tarball produced");
-const tarball = join(process.cwd(), "temp-pack", files[0]);
+// Prefer the tarball matching the current package version (stale tarballs
+// from earlier versions may sit in temp-pack during development).
+const exact = files.find((f) => f.includes(pkgPre.version));
+const tarball = join(process.cwd(), "temp-pack", exact ?? files[0]);
 console.log(`tarball: ${tarball}`);
 const dir = mkdtempSync(join(tmpdir(), "bridge-pkg-smoke-"));
 const prefix = join(dir, "prefix");
@@ -28,7 +32,8 @@ runNpm(["install", "-g", tarball, "--prefix", prefix]);
 const globalRoot = runNpm(["root", "-g", "--prefix", prefix]).trim().split("\n").pop();
 const installed = join(globalRoot, "@cynrath", "ackit-spec-kit-bridge", "dist", "cli", "index.js");
 if (!existsSync(installed)) throw new Error(`installed CLI missing: ${installed}`);
+const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 const v = execFileSync("node", [installed, "version"], { encoding: "utf8", timeout: 60_000 });
 console.log(v);
-if (!v.includes("0.1.0")) throw new Error("installed version mismatch");
+if (!v.includes(pkg.version)) throw new Error("installed version mismatch");
 console.log("package-smoke PASS");

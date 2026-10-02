@@ -37,4 +37,4 @@ differ  → STALE (gate fails with VERDICT_STALE)
 missing → NOT_VERIFIED (gate fails with NOT_VERIFIED)
 ```
 
-`stalePolicy: fail` is the only v0.1.0 policy.
+`stalePolicy: fail` is the only supported policy.
