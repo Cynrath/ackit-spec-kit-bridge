@@ -25,7 +25,7 @@ jobs:
       # actions/checkout@v4 (f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a)
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
       # actions/setup-node@v4 (ae0d4ed08881f17d1511386f5be3e62356acd4a6)
-      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+      - uses: actions/setup-node@54337e0d02de9202d0948aaff36ad556375497b9
         with:
           node-version: ${{ matrix.node }}
       # pnpm/action-setup@v4 (b906affcce14559ad1aafd4ab0e942779e9f58b1)
@@ -60,7 +60,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+      - uses: actions/setup-node@54337e0d02de9202d0948aaff36ad556375497b9
         with:
           node-version: "22"
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+      - uses: actions/setup-node@54337e0d02de9202d0948aaff36ad556375497b9
         with:
           node-version: "22"
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
