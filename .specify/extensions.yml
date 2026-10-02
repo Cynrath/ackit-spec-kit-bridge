@@ -1,0 +1,50 @@
+installed:
+- ackit
+settings:
+  auto_execute_hooks: true
+hooks:
+  after_specify:
+  - extension: ackit
+    command: speckit.ackit.sync
+    enabled: true
+    optional: true
+    priority: 10
+    prompt: Sync the new spec into ACKit?
+    description: Sync Spec Kit feature state into the ACKit task lifecycle
+    condition: null
+  after_plan:
+  - extension: ackit
+    command: speckit.ackit.sync
+    enabled: true
+    optional: true
+    priority: 10
+    prompt: Sync the plan into ACKit?
+    description: Sync Spec Kit feature state into the ACKit task lifecycle
+    condition: null
+  after_tasks:
+  - extension: ackit
+    command: speckit.ackit.sync
+    enabled: true
+    optional: true
+    priority: 10
+    prompt: Sync tasks into ACKit?
+    description: Sync Spec Kit feature state into the ACKit task lifecycle
+    condition: null
+  before_implement:
+  - extension: ackit
+    command: speckit.ackit.status
+    enabled: true
+    optional: true
+    priority: 10
+    prompt: Check ACKit bridge status before implementing?
+    description: Read-only preflight of lifecycle state before implementation
+    condition: null
+  after_implement:
+  - extension: ackit
+    command: speckit.ackit.verify
+    enabled: true
+    optional: true
+    priority: 10
+    prompt: Run ACKit verification after implementing?
+    description: State-bound verification after implementation (never auto-completes)
+    condition: null
