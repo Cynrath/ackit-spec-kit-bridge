@@ -743,11 +743,13 @@ program
 program
   .command("complete")
   .description("Safe completion: gate first, then ACKit task completion")
+  .option("--profile <name>", "required verification profile", "standard")
   .option("--json", "machine-readable JSON output")
-  .action(async (cmdOpts: { json?: boolean }) => {
+  .action(async (cmdOpts: { json?: boolean; profile?: string }) => {
     try {
       const r = root();
       const useJson = asJson() || !!cmdOpts.json;
+      const expectedProfile = cmdOpts.profile ?? "standard";
       const ctx = await loadContext(r);
       const verdictFresh = ctx.verdict ? ctx.verdict.subjectDigest === ctx.subjectDigest : null;
       const gate = evaluateGate({
@@ -758,7 +760,7 @@ program
         hasTasks: !!ctx.speckit.activeFeature?.artifacts["tasks.md"],
         hasMapping: !!(ctx.mapping.featureDir && ctx.mapping.ackitTaskId),
         blockingSecurity: false,
-        profileChecksComplete: profileSatisfies(ctx.verdict?.profile ?? null, "standard"),
+        profileChecksComplete: profileSatisfies(ctx.verdict?.profile ?? null, expectedProfile),
       });
       if (!gate.pass) {
         if (useJson)

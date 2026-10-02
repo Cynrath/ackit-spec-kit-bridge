@@ -28,3 +28,9 @@ UNINITIALIZED → READY → SPECIFIED → PLANNED → TASKED → IMPLEMENTING �
 - Branch names are metadata only, never the active-feature authority.
 - `VERIFYING` is not a persisted state: `verify` is an explicit command whose
   output (bundle + verdict) is observed by the next `status`/`gate`.
+- Completion itself mutates the mapped ACKit task file (`status: completed`),
+  so a verdict recorded before `complete` is STALE afterwards by design.
+  The steady state is reached with one final `verify`: fresh PASS on the
+  completed task state → `COMPLETE`. `complete` persists completion evidence
+  (`state/completion.json`) but does not self-certify; only a fresh verdict
+  proves the completed state.

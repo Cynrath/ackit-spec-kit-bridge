@@ -65,9 +65,12 @@ actions, checkpoint ref, Git state. Validates against
 
 ## complete
 
-`ackit-speckit complete [--json]` — runs the gate, refuses on
-FAIL/STALE/BLOCKED/NOT_VERIFIED, then delegates to `ackit task complete`
-and persists completion evidence.
+`ackit-speckit complete [--profile quick|standard|high-risk] [--json]` — runs
+the gate for the expected profile (default `standard`), refuses on
+FAIL/STALE/BLOCKED/NOT_VERIFIED or an insufficient profile, then delegates to
+`ackit task complete` and persists completion evidence. Because completion
+mutates the task file, run a final `verify` afterwards: fresh PASS on the
+completed state → `COMPLETE`.
 
 ## explain
 
