@@ -13,5 +13,5 @@ jobs:
     name: dependency-review
     runs-on: ubuntu-latest
     steps:
-      # actions/dependency-review-action@v4 (5d475c7729d7b3a9d3bbfcb3c8b023f8dd184001)
-      - uses: actions/dependency-review-action@5d475c7729d7b3a9d3bbfcb3c8b023f8dd184001
+      # actions/dependency-review-action@v4.9.0 (2031cfc080254a8a887f58cffee85186f0e49e48)
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48
