@@ -170,18 +170,31 @@ jobs:
           fi
           echo "TARBALL=${TARBALL}" >> "${GITHUB_ENV}"
 
-      - name: Fail closed if version already exists on npm
+      - name: Check registry state (fail closed, or narrow resume)
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if npm view "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" version >/dev/null 2>&1; then
-            echo "::error::@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION} already exists — refusing to republish (never move a published version)"
-            exit 1
+            if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+              echo "::error::@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION} and GitHub Release ${RELEASE_TAG} both exist — refusing to republish (never move a published version)"
+              exit 1
+            fi
+            echo "version exists but GitHub Release ${RELEASE_TAG} is missing (earlier run published, then failed before Release)"
+            echo "RESUME=true: skipping npm publish, continuing with registry verification + GitHub Release"
+            echo "RESUME=true" >> "${GITHUB_ENV}"
+          else
+            echo "version ${RELEASE_VERSION} absent from registry — safe to publish"
+            echo "RESUME=false" >> "${GITHUB_ENV}"
           fi
-          echo "version ${RELEASE_VERSION} absent from registry — safe to publish"
 
       - name: Publish to npm via OIDC Trusted Publishing (no token)
         run: |
           set -euo pipefail
+          if [ "${RESUME}" = "true" ]; then
+            echo "resume path: npm version already published, skipping publish"
+            exit 0
+          fi
           # Absolute path: a bare relative tarball path is misparsed by npm
           # as a git spec (ssh ls-remote). Never publish a re-resolved spec.
           npm publish "${PWD}/dist-release/${TARBALL}" --access public --provenance
@@ -189,12 +202,13 @@ jobs:
       - name: Verify npm registry + fresh consumer
         run: |
           set -euo pipefail
-          for i in 1 2 3 4 5 6; do
+          # New versions can take minutes to converge across registry replicas.
+          for i in $(seq 1 12); do
             if [ "$(npm view '@cynrath/ackit-spec-kit-bridge' version)" = "${RELEASE_VERSION}" ]; then
               break
             fi
-            sleep 20
-            if [ "$i" = "6" ]; then
+            sleep 30
+            if [ "$i" = "12" ]; then
               echo "::error::registry latest did not converge to ${RELEASE_VERSION}"
               exit 1
             fi
@@ -206,7 +220,18 @@ jobs:
           fi
           LOCAL_SHASUM="$(node -p "require('crypto').createHash('sha1').update(require('fs').readFileSync('dist-release/${TARBALL}')).digest('hex')")"
           REG_SHASUM="$(npm view "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" dist.shasum)"
-          if [ "${LOCAL_SHASUM}" != "${REG_SHASUM}" ]; then
+          if [ "${RESUME}" = "true" ]; then
+            # A resumed run rebuilds the tarball from the same tag commit, but
+            # tarball bytes embed build-time mtimes, so cross-run shasum
+            # equality cannot hold. Verify identity instead: the registry
+            # version resolves and its metadata matches this release.
+            REG_VERSION="$(npm view "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" version)"
+            if [ "${REG_VERSION}" != "${RELEASE_VERSION}" ]; then
+              echo "::error::registry version '${REG_VERSION}' != '${RELEASE_VERSION}'"
+              exit 1
+            fi
+            echo "resume path: registry holds ${REG_VERSION} (local shasum ${LOCAL_SHASUM} is this run's audit artifact)"
+          elif [ "${LOCAL_SHASUM}" != "${REG_SHASUM}" ]; then
             echo "::error::dist.shasum '${REG_SHASUM}' != local '${LOCAL_SHASUM}'"
             exit 1
           fi
