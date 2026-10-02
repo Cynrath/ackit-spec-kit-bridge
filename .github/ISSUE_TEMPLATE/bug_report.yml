@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible bridge defect
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Doctor output (`ackit-speckit doctor --json`)
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions (Node, ACKit, Spec Kit, bridge)
+    validations:
+      required: true

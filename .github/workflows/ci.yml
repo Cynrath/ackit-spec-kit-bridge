@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: quality ${{ matrix.os }} / node-${{ matrix.node }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ["22", "24"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # actions/checkout@v4 (f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a)
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      # actions/setup-node@v4 (ae0d4ed08881f17d1511386f5be3e62356acd4a6)
+      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+        with:
+          node-version: ${{ matrix.node }}
+      # pnpm/action-setup@v4 (b906affcce14559ad1aafd4ab0e942779e9f58b1)
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          package_json_file: package.json
+      - name: Frozen install
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Format check
+        run: pnpm format:check
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Build
+        run: pnpm build
+      - name: Unit + security tests
+        run: pnpm test
+      - name: CLI smoke
+        run: pnpm smoke:cli
+      - name: Extension smoke
+        run: pnpm smoke:extension
+      - name: Package smoke
+        run: pnpm smoke:package
+
+  e2e:
+    name: e2e ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+        with:
+          node-version: "22"
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          package_json_file: package.json
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.11"
+      - name: Install uv + specify + ackit
+        run: |
+          pip install uv
+          uv tool install specify-cli
+          npm install -g @cynrath/agent-context-kit
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Integration + E2E (real CLIs)
+        run: npx vitest run tests/integration tests/e2e
+
+  ackit-gate:
+    name: ackit-gate (dogfood)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+        with:
+          node-version: "22"
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          package_json_file: package.json
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: ACKit self-checks
+        run: |
+          npx --yes @cynrath/agent-context-kit@0.5.4 config check
+          npx --yes @cynrath/agent-context-kit@0.5.4 scan --ci
+          npx --yes @cynrath/agent-context-kit@0.5.4 policy check

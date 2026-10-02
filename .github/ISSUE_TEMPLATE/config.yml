@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue
+    url: https://github.com/Cynrath/ackit-spec-kit-bridge/blob/main/SECURITY.md
+    about: Report vulnerabilities privately, not via public issues.
+  - name: ACKit upstream
+    url: https://github.com/Cynrath/agent-context-kit
+    about: Issues in ACKit itself belong upstream.
+  - name: Spec Kit upstream
+    url: https://github.com/github/spec-kit
+    about: Issues in Spec Kit itself belong upstream.

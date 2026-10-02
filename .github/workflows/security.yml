@@ -1,0 +1,51 @@
+name: Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
+        with:
+          node-version: "22"
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          package_json_file: package.json
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=moderate
+      - name: ACKit scan
+        run: npx --yes @cynrath/agent-context-kit@0.5.4 scan --ci
+
+  codeql:
+    name: codeql (javascript-typescript)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      # github/codeql-action/init@v3 (1190a975f95ce23525efb6a3fc21ea29567c1b52)
+      - uses: github/codeql-action/init@1190a975f95ce23525efb6a3fc21ea29567c1b52
+        with:
+          languages: javascript-typescript
+      # github/codeql-action/autobuild@v3 (1190a975f95ce23525efb6a3fc21ea29567c1b52)
+      - uses: github/codeql-action/autobuild@1190a975f95ce23525efb6a3fc21ea29567c1b52
+      # github/codeql-action/analyze@v3 (1190a975f95ce23525efb6a3fc21ea29567c1b52)
+      - uses: github/codeql-action/analyze@1190a975f95ce23525efb6a3fc21ea29567c1b52
