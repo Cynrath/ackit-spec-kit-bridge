@@ -12,30 +12,45 @@ on:
   push:
     tags:
       - "v*.*.*"
+  # Operational re-run path (same gates, same OIDC publish, same tag commit).
+  # Used only when a tag-triggered run fails closed before publishing for an
+  # environmental reason (e.g. runner npm too old for Trusted Publishing).
+  # Never moves or recreates the tag; the tag commit stays authoritative.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Exact release tag to publish (vX.Y.Z, must already exist)"
+        required: true
 
 permissions:
   contents: write
   id-token: write
 
 concurrency:
-  group: release-${{ github.ref_name }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   release:
-    name: release ${{ github.ref_name }}
+    name: release ${{ inputs.tag || github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       # actions/checkout@v4 (f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a)
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ inputs.tag || github.ref }}
 
       # actions/setup-node@v4 (ae0d4ed08881f17d1511386f5be3e62356acd4a6)
       - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
+
+      # The runner-bundled npm (10.x on Node 22) predates Trusted Publishing
+      # support (npm >= 11.5.1). Pin npm 11 explicitly so OIDC publish and
+      # the capability gate below behave deterministically on every runner.
+      - name: Upgrade npm for Trusted Publishing
+        run: npm install -g npm@11
 
       # pnpm/action-setup@v4 (b906affcce14559ad1aafd4ab0e942779e9f58b1)
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
@@ -45,7 +60,7 @@ jobs:
       - name: Validate release identity (tag, checkout, package, npm CLI)
         run: |
           set -euo pipefail
-          TAG_NAME="${GITHUB_REF_NAME}"
+          TAG_NAME="${{ inputs.tag || github.ref_name }}"
           if [[ ! "${TAG_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::tag '${TAG_NAME}' is not an exact vX.Y.Z release tag"
             exit 1
