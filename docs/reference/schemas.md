@@ -1,6 +1,6 @@
 # Schemas
 
-Public v0.1.0 contracts. Every `--json` payload carries its schema id.
+Public v0.1.1 contracts. Every `--json` payload carries its schema id.
 
 | Artifact | File | Schema id |
 |---|---|---|

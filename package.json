@@ -1,6 +1,6 @@
 {
   "name": "@cynrath/ackit-spec-kit-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Community integration for ACKit and GitHub Spec Kit. Bridges Spec Kit intent artifacts into ACKit tasks, evidence, verification gates, and handoffs.",
   "keywords": [
     "ackit",
@@ -14,7 +14,7 @@
     "typescript",
     "sdd"
   ],
-  "homepage": "https://github.com/Cynrath/ackit-spec-kit-bridge",
+  "homepage": "https://cynrath.github.io/ackit-spec-kit-bridge/",
   "bugs": {
     "url": "https://github.com/Cynrath/ackit-spec-kit-bridge/issues"
   },
@@ -35,7 +35,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.js",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },

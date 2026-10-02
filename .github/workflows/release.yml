@@ -1,48 +1,221 @@
 name: Release
 
+# Tag-driven normal release (no manual npm approval):
+#   push vX.Y.Z → validate identity → quality gate → exact tarball →
+#   version-absence gate → OIDC npm publish --provenance → registry verify →
+#   fresh consumer smoke → GitHub Release (exact tarball + archives) → verify.
+# No NODE_AUTH_TOKEN, no NPM_TOKEN, no long-lived npm secret.
+# Staged publishing (`npm stage publish` → manual approval) is an optional
+# maximum-assurance mode documented in docs/guides/release.md, never the default.
+
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
 
 permissions:
   contents: write
   id-token: write
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   release:
     name: release ${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
+      # actions/checkout@v4 (f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a)
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
           ref: ${{ github.ref }}
+
+      # actions/setup-node@v4 (ae0d4ed08881f17d1511386f5be3e62356acd4a6)
       - uses: actions/setup-node@ae0d4ed08881f17d1511386f5be3e62356acd4a6
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
+
+      # pnpm/action-setup@v4 (b906affcce14559ad1aafd4ab0e942779e9f58b1)
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
           package_json_file: package.json
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm format:check
-      - run: pnpm typecheck
-      - run: pnpm build
-      - run: pnpm test:unit
-      - run: pnpm smoke:cli
-      - run: pnpm smoke:extension
-      - run: pnpm smoke:package
-      - name: Package artifacts
+
+      - name: Validate release identity (tag, checkout, package, npm CLI)
         run: |
-          pnpm pack --pack-destination dist-release
-          (cd spec-kit/extension && zip -r ../../dist-release/ackit-extension-${{ github.ref_name }}.zip . -x "*.git*")
-          (cd spec-kit/workflow && zip -r ../../dist-release/ackit-workflow-${{ github.ref_name }}.zip . -x "*.git*")
+          set -euo pipefail
+          TAG_NAME="${GITHUB_REF_NAME}"
+          if [[ ! "${TAG_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::tag '${TAG_NAME}' is not an exact vX.Y.Z release tag"
+            exit 1
+          fi
+          TAG_COMMIT="$(git rev-parse "${TAG_NAME}^{commit}")"
+          HEAD_COMMIT="$(git rev-parse HEAD)"
+          if [ "${TAG_COMMIT}" != "${HEAD_COMMIT}" ]; then
+            echo "::error::checked-out commit ${HEAD_COMMIT} != tagged commit ${TAG_COMMIT}"
+            exit 2
+          fi
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "${PKG_VERSION}" != "${TAG_NAME#v}" ]; then
+            echo "::error::package.json version '${PKG_VERSION}' != tag '${TAG_NAME}'"
+            exit 3
+          fi
+          PKG_NAME="$(node -p "require('./package.json').name")"
+          if [ "${PKG_NAME}" != "@cynrath/ackit-spec-kit-bridge" ]; then
+            echo "::error::unexpected package name '${PKG_NAME}'"
+            exit 4
+          fi
+          REPO_URL="$(node -p "require('./package.json').repository.url")"
+          case "${REPO_URL}" in
+            *github.com/Cynrath/ackit-spec-kit-bridge*)
+              ;;
+            *)
+              echo "::error::repository.url '${REPO_URL}' does not match Cynrath/ackit-spec-kit-bridge (Trusted Publishing)"
+              exit 5
+              ;;
+          esac
+          NPM_VERSION="$(npm --version)"
+          SMALLEST="$(printf '%s\n' '11.5.1' "${NPM_VERSION}" | sort -V | head -n1)"
+          if [ "${SMALLEST}" != '11.5.1' ]; then
+            echo "::error::npm ${NPM_VERSION} lacks Trusted Publishing support (requires >= 11.5.1)"
+            exit 6
+          fi
+          {
+            echo "RELEASE_TAG=${TAG_NAME}"
+            echo "RELEASE_VERSION=${PKG_VERSION}"
+          } >> "${GITHUB_ENV}"
+
+      - name: Frozen install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Tests
+        run: pnpm test
+
+      - name: CLI smoke
+        run: pnpm smoke:cli
+
+      - name: Extension smoke
+        run: pnpm smoke:extension
+
+      - name: Package smoke
+        run: pnpm smoke:package
+
+      - name: ACKit gates (dogfood)
+        run: |
+          npx --yes @cynrath/agent-context-kit@0.5.4 config check
+          npx --yes @cynrath/agent-context-kit@0.5.4 policy check
+          npx --yes @cynrath/agent-context-kit@0.5.4 scan --ci
+          npx --yes @cynrath/agent-context-kit@0.5.4 readiness
+          npx --yes @cynrath/agent-context-kit@0.5.4 skills validate
+
+      - name: Build exact tarball + archives (single audited source)
+        run: |
+          set -euo pipefail
+          mkdir -p dist-release
+          TARBALL="$(npm pack --pack-destination dist-release --silent | tail -n1)"
+          echo "tarball: ${TARBALL}"
+          (cd spec-kit/extension && zip -r "../../dist-release/ackit-extension-${RELEASE_TAG}.zip" . -x "*.git*")
+          (cd spec-kit/workflow && zip -r "../../dist-release/ackit-workflow-${RELEASE_TAG}.zip" . -x "*.git*")
           (cd dist-release && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
-      - name: Publish GitHub Release
+          # Duplicate dist/src guard: the tarball must not contain a dist/src tree.
+          if tar -tzf "dist-release/${TARBALL}" | grep -q '^package/dist/src/'; then
+            echo "::error::tarball contains duplicate package/dist/src tree"
+            exit 1
+          fi
+          # Stale pending-publication text must not ship.
+          if tar -xzf "dist-release/${TARBALL}" -O package/README.md | grep -qi 'publication.*pending\|install from the GitHub Release tarball'; then
+            echo "::error::packaged README still contains stale npm-pending text"
+            exit 1
+          fi
+          echo "TARBALL=${TARBALL}" >> "${GITHUB_ENV}"
+
+      - name: Fail closed if version already exists on npm
+        run: |
+          set -euo pipefail
+          if npm view "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" version >/dev/null 2>&1; then
+            echo "::error::@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION} already exists — refusing to republish (never move a published version)"
+            exit 1
+          fi
+          echo "version ${RELEASE_VERSION} absent from registry — safe to publish"
+
+      - name: Publish to npm via OIDC Trusted Publishing (no token)
+        run: |
+          set -euo pipefail
+          npm publish "dist-release/${TARBALL}" --access public --provenance
+
+      - name: Verify npm registry + fresh consumer
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            if [ "$(npm view '@cynrath/ackit-spec-kit-bridge' version)" = "${RELEASE_VERSION}" ]; then
+              break
+            fi
+            sleep 20
+            if [ "$i" = "6" ]; then
+              echo "::error::registry latest did not converge to ${RELEASE_VERSION}"
+              exit 1
+            fi
+          done
+          LATEST="$(npm view '@cynrath/ackit-spec-kit-bridge' dist-tags --json | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).latest")"
+          if [ "${LATEST}" != "${RELEASE_VERSION}" ]; then
+            echo "::error::dist-tags.latest '${LATEST}' != '${RELEASE_VERSION}'"
+            exit 1
+          fi
+          LOCAL_SHASUM="$(node -p "require('crypto').createHash('sha1').update(require('fs').readFileSync('dist-release/${TARBALL}')).digest('hex')")"
+          REG_SHASUM="$(npm view "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" dist.shasum)"
+          if [ "${LOCAL_SHASUM}" != "${REG_SHASUM}" ]; then
+            echo "::error::dist.shasum '${REG_SHASUM}' != local '${LOCAL_SHASUM}'"
+            exit 1
+          fi
+          TMPDIR="$(mktemp -d)"
+          trap 'rm -rf "${TMPDIR}"' EXIT
+          npm install --prefix "${TMPDIR}" "@cynrath/ackit-spec-kit-bridge@${RELEASE_VERSION}" --no-save --no-package-lock
+          "${TMPDIR}/node_modules/.bin/ackit-speckit" --version | grep -q "${RELEASE_VERSION}"
+          "${TMPDIR}/node_modules/.bin/ackit-speckit" --help >/dev/null
+          if "${TMPDIR}/node_modules/.bin/ackit-speckit" --help | grep -qi 'publication.*pending'; then
+            echo "::error::installed README/help still references pending publication"
+            exit 1
+          fi
+
+      - name: Publish GitHub Release (after npm verification)
         # softprops/action-gh-release@v2 (3bb12739c298aeb8a4eeaf626c5b8d85266b0e65)
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
           files: |
             dist-release/*
           generate_release_notes: true
+          body: |
+            ## Install
+
+            ```powershell
+            npm install --global @cynrath/ackit-spec-kit-bridge@${{ env.RELEASE_VERSION }}
+            ackit-speckit --version
+            ```
+
+            - npm: https://www.npmjs.com/package/@cynrath/ackit-spec-kit-bridge
+            - Hosted docs: https://cynrath.github.io/ackit-spec-kit-bridge/
+            - ACKit: https://github.com/Cynrath/agent-context-kit
+            - Tested: ACKit 0.5.4 · Spec Kit specify 1.0.13 · Node >= 22 · Windows + Linux
+
+            Community integration for ACKit and GitHub Spec Kit. Not an official GitHub integration.
+
+      - name: Verify release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download "${RELEASE_TAG}" --dir dist-verify --pattern '*'
+          (cd dist-verify && sha256sum -c SHA256SUMS.txt)

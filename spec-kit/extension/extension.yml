@@ -3,12 +3,12 @@ schema_version: "1.0"
 extension:
   id: "ackit"
   name: "ACKit Bridge"
-  version: "0.1.0"
+  version: "0.1.1"
   description: "Bridge GitHub Spec Kit artifacts into ACKit tasks, evidence, verification gates, and handoffs."
   author: "Cynrath"
   repository: "https://github.com/Cynrath/ackit-spec-kit-bridge"
   license: "MIT"
-  homepage: "https://github.com/Cynrath/ackit-spec-kit-bridge"
+  homepage: "https://cynrath.github.io/ackit-spec-kit-bridge/"
 
 requires:
   speckit_version: ">=1.0.0"

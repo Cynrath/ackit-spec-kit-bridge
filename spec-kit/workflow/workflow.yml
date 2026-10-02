@@ -2,7 +2,7 @@ schema_version: "1.0"
 workflow:
   id: "ackit-verified-sdd"
   name: "ACKit-Verified SDD"
-  version: "0.1.0"
+  version: "0.1.1"
   author: "Cynrath"
   description: "Spec Kit SDD cycle with ACKit sync, verification, and gated completion"
 requires:

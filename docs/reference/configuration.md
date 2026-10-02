@@ -12,10 +12,10 @@ specKit:
   command: specify      # Spec Kit executable
   minVersion: 1.0.0
 mapping:
-  mode: active-feature  # only supported mode in v0.1.0
+  mode: active-feature  # only supported mode
 verification:
   defaultProfile: standard
-  stalePolicy: fail     # only supported policy in v0.1.0
+  stalePolicy: fail     # only supported policy
 profiles:
   quick: {}
   standard: {}

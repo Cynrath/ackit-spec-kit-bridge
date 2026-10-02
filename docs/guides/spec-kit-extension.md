@@ -33,5 +33,5 @@ Each command delegates to the bridge CLI:
 Release archives (`ackit-extension-*.zip`) install identically:
 
 ```powershell
-specify extension add ackit --from ./ackit-extension-0.1.0.zip
+specify extension add ackit --from ./ackit-extension-v0.1.1.zip
 ```
