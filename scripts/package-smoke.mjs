@@ -15,31 +15,18 @@ if (files.length === 0) throw new Error("no tarball produced");
 const tarball = join(process.cwd(), "temp-pack", files[0]);
 console.log(`tarball: ${tarball}`);
 const dir = mkdtempSync(join(tmpdir(), "bridge-pkg-smoke-"));
+const prefix = join(dir, "prefix");
 // npm is a .cmd shim on Windows; spawn it through cmd.exe there.
-const npmCmd = process.platform === "win32" ? ["cmd.exe", "/d", "/s", "/c", "npm"] : ["npm"];
-execFileSync(
-  npmCmd[0],
-  [...npmCmd.slice(1), "install", "-g", tarball, "--prefix", join(dir, "prefix")],
-  {
-    timeout: 180_000,
-  },
-);
-const bin = join(dir, "prefix", "ackit-speckit");
-const binWin = `${bin}.cmd`;
-const cli = existsSync(binWin)
-  ? binWin
-  : join(dir, "prefix", "node_modules", ".bin", "ackit-speckit.cmd");
-void cli;
-const installed = join(
-  dir,
-  "prefix",
-  "node_modules",
-  "@cynrath",
-  "ackit-spec-kit-bridge",
-  "dist",
-  "cli",
-  "index.js",
-);
+const npmBin = process.platform === "win32" ? "cmd.exe" : "npm";
+const npmBase = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
+function runNpm(args) {
+  return execFileSync(npmBin, [...npmBase, ...args], { encoding: "utf8", timeout: 180_000 });
+}
+runNpm(["install", "-g", tarball, "--prefix", prefix]);
+// Global layout differs per OS (prefix/node_modules vs prefix/lib/node_modules);
+// ask npm instead of guessing.
+const globalRoot = runNpm(["root", "-g", "--prefix", prefix]).trim().split("\n").pop();
+const installed = join(globalRoot, "@cynrath", "ackit-spec-kit-bridge", "dist", "cli", "index.js");
 if (!existsSync(installed)) throw new Error(`installed CLI missing: ${installed}`);
 const v = execFileSync("node", [installed, "version"], { encoding: "utf8", timeout: 60_000 });
 console.log(v);

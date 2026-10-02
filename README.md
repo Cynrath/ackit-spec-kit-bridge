@@ -41,6 +41,15 @@ ackit-speckit version
 ackit-speckit --help
 ```
 
+> npm publication note: the registry package is published once the
+> `npmjs.com` trusted-publisher entry for this exact package name exists
+> (an external web-UI step; no credentials are stored in this repo). Until
+> then, install from the GitHub Release tarball:
+>
+> ```powershell
+> npm install -g ./cynrath-ackit-spec-kit-bridge-0.1.0.tgz
+> ```
+
 ## 5-minute quickstart
 
 ```powershell
