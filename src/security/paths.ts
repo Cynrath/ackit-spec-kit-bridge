@@ -6,13 +6,18 @@ export async function resolveContainedPath(
   candidate: string,
 ): Promise<string | null> {
   try {
+    // Anchor everything to the canonical root: CI tmpdirs often differ in
+    // 8.3 short names, symlink prefixes, or letter case from their realpath,
+    // so resolving the candidate against the unresolved root and comparing
+    // with the resolved root yields false ".." escapes. Existing entries are
+    // additionally resolved so in-tree symlinks pointing outside are rejected.
     const rootReal = await realpath(root);
-    const abs = isAbsolute(candidate) ? candidate : resolve(root, candidate);
-    const absReal = await realpath(abs).catch(() => abs);
+    const anchored = isAbsolute(candidate) ? candidate : resolve(rootReal, candidate);
+    const absReal = await realpath(anchored).catch(() => anchored);
     const rel = relative(rootReal, absReal);
-    if (rel === "" || (!rel.startsWith("..") && !isAbsolute(rel))) return absReal;
-    // Allow the root itself and children; reject traversal.
-    if (rel.split(sep)[0] === "..") return null;
+    if (rel === "") return absReal;
+    const parts = rel.split(sep);
+    if (parts[0] === ".." || isAbsolute(rel)) return null;
     return absReal;
   } catch {
     return null;

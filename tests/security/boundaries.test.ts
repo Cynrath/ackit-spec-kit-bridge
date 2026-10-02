@@ -26,6 +26,12 @@ describe("security boundaries", () => {
     expect(r.stdout).toContain(evil);
   });
 
+  it("contains redundant segments without false escape", async () => {
+    const root = mkdtempSync(join(tmpdir(), "bridge-sec-"));
+    expect(await resolveContainedPath(root, "./specs/../specs/001-ok")).not.toBeNull();
+    expect(await resolveContainedPath(root, "specs/../../evil")).toBeNull();
+  });
+
   it("reports missing commands as notFound instead of crashing", async () => {
     const r = await execFileSafe("definitely-not-a-real-command-xyz", ["--version"], {
       cwd: tmpdir(),
