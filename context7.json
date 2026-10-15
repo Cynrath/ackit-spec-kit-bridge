@@ -6,7 +6,8 @@
     "docs/guides",
     "docs/reference",
     "docs/concepts",
-    "docs/architecture"
+    "docs/architecture",
+    "docs/adr"
   ],
   "excludeFolders": [
     "docs/tasks",
@@ -35,13 +36,11 @@
     "SUPPORT.md"
   ],
   "rules": [
-    "Use the maintained guides and references for ACKit Spec Kit Bridge; archived task records and past release notes are historical evidence.",
-    "Preserve existing offline-first behavior; do not require network services, telemetry or untrusted plugins for the product runtime.",
-    "Do not treat generated verification results as valid without the documented evidence and freshness checks."
+    "Use docs/guides/feature-index.md to locate implemented CLI, verification, Spec Kit extension and handoff features; consult docs/reference/cli.md for exact commands.",
+    "Spec Kit is the source of specifications; ACKit is the source of tasks and evidence; the bridge coordinates them and does not replace either.",
+    "Completion is allowed only after a fresh PASS verdict; any subject mutation invalidates an old verdict, and stalePolicy fail must not be bypassed.",
+    "The bridge runtime is offline-first with redacted evidence, path containment and argv-array subprocess calls; Docs7/Context7 hosting is opt-in and separate from runtime.",
+    "Do not present archived task records or historical release descriptions as current runtime behavior."
   ],
-  "previousVersions": [
-    {
-      "tag": "v0.1.1"
-    }
-  ]
+  "branch": "main"
 }
