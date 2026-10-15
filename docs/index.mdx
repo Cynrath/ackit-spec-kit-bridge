@@ -1,0 +1,31 @@
+---
+title: ACKit Spec Kit Bridge
+description: Connect GitHub Spec Kit specifications to ACKit tasks, evidence, verification and handoffs.
+---
+
+# ACKit Spec Kit Bridge documentation
+
+ACKit Spec Kit Bridge is a community integration between GitHub Spec Kit and ACKit. Spec Kit remains the source of intent, plans and feature specifications. ACKit owns task tracking and evidence-backed verification. The bridge synchronizes them without modifying either upstream product.
+
+## Install
+
+Requires Node.js 22 or newer. GitHub Spec Kit is a separate dependency.
+
+```powershell
+npm install --global @cynrath/agent-context-kit @cynrath/ackit-spec-kit-bridge
+ackit-speckit version
+```
+
+## Inspect verification state
+
+```powershell
+ackit-speckit status --json
+ackit-speckit verify --profile standard
+ackit-speckit gate
+```
+
+Start with [getting started](/guides/getting-started), [trust-flow walkthrough](/guides/trust-flow-demo), [verification freshness](/concepts/verification-freshness) and the [CLI reference](/reference/cli).
+
+For [Context7 indexing, Docs7 hosting and library owner verification](/guides/context7-docs7), follow the maintained integration guide.
+
+Source: [GitHub repository](https://github.com/Cynrath/ackit-spec-kit-bridge). Releases: [GitHub Releases](https://github.com/Cynrath/ackit-spec-kit-bridge/releases). Package: [npm](https://www.npmjs.com/package/@cynrath/ackit-spec-kit-bridge).
