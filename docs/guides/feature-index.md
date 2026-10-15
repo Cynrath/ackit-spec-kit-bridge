@@ -23,7 +23,7 @@ This index maps the **implemented and tested** bridge capabilities to maintained
 | Read-only completion gate rejects stale or failed verification | `ackit-speckit gate` | [CLI](../reference/cli.md), [lifecycle](../architecture/lifecycle.md) |
 | Completion requires a fresh PASS; no automatic task completion | `ackit-speckit complete` | [Trust-flow demo](trust-flow-demo.md), [CLI](../reference/cli.md) |
 | Reproducible checkpoints for resume | `ackit-speckit checkpoint` | [CLI](../reference/cli.md), [trust-flow demo](trust-flow-demo.md) |
-| Human/agent deterministic handoffs | `ackit-speckit handoff --format markdown|json` | [CLI](../reference/cli.md) |
+| Human/agent deterministic handoffs | `ackit-speckit handoff --format markdown\|json` | [CLI](../reference/cli.md) |
 | Machine-readable JSON schemas and stable exit codes | Configuration, status, verdict, bundle, checkpoint, handoff | [Schemas](../reference/schemas.md), [CLI](../reference/cli.md) |
 
 ## Spec Kit integration and security
