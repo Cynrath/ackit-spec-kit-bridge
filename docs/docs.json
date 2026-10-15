@@ -8,17 +8,18 @@
   "navigation": {
     "groups": [
       {
-        "group": "Start here",
+        "group": "Introduction",
         "pages": [
           "index",
           "guides/getting-started",
-          "guides/existing-project",
-          "guides/trust-flow-demo"
+          "guides/feature-index",
+          "guides/existing-project"
         ]
       },
       {
         "group": "Guides",
         "pages": [
+          "guides/trust-flow-demo",
           "guides/spec-kit-extension",
           "guides/ci",
           "guides/troubleshooting",
@@ -34,13 +35,30 @@
         ]
       },
       {
-        "group": "Reference",
+        "group": "CLI and contracts",
         "pages": [
           "reference/cli",
           "reference/configuration",
           "reference/lifecycle-status",
           "reference/compatibility",
           "reference/schemas"
+        ]
+      },
+      {
+        "group": "Architecture and security",
+        "pages": [
+          "architecture/overview",
+          "architecture/lifecycle",
+          "architecture/state-digest",
+          "architecture/security-model"
+        ]
+      },
+      {
+        "group": "Architecture decisions",
+        "pages": [
+          "adr/0001-standalone-bridge",
+          "adr/0002-state-bound-verification",
+          "adr/0003-cli-contract-boundaries"
         ]
       }
     ]
