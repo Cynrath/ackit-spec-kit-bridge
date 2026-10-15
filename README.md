@@ -325,6 +325,8 @@ Bridge versioning is independent from ACKit and Spec Kit versions (semver). `doc
 - ACKit docs: <https://cynrath.github.io/agent-context-kit/>
 - Cynrath home: <https://cynrath.github.io/>
 
+**Context7 / Docs7:** The repository now includes [`context7.json`](context7.json) for maintained documentation indexing and [`docs/docs.json`](docs/docs.json) for optional Docs7 hosting. See the [Context7, Docs7 and verification guide](docs/guides/context7-docs7.md). The existing GitHub Pages site stays active.
+
 ## Development
 
 ```powershell
