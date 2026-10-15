@@ -1,0 +1,48 @@
+{
+  "$schema": "https://context7.com/schema/docs7.json",
+  "name": "ACKit Spec Kit Bridge",
+  "colors": {
+    "primary": "#0B84FF"
+  },
+  "filterSidebar": true,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Start here",
+        "pages": [
+          "index",
+          "guides/getting-started",
+          "guides/existing-project",
+          "guides/trust-flow-demo"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/spec-kit-extension",
+          "guides/ci",
+          "guides/troubleshooting",
+          "guides/release",
+          "guides/context7-docs7"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "concepts/spec-kit-and-ackit",
+          "concepts/verification-freshness"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/cli",
+          "reference/configuration",
+          "reference/lifecycle-status",
+          "reference/compatibility",
+          "reference/schemas"
+        ]
+      }
+    ]
+  }
+}
