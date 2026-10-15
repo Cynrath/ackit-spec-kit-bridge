@@ -3,6 +3,14 @@
 All notable changes to `@cynrath/ackit-spec-kit-bridge` are documented here.
 This project follows Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Context7 repository indexing metadata and optional Docs7 Free documentation
+  configuration, plus owner claiming and verification guidance. Existing
+  runtime, npm version, release workflow and GitHub Pages remain unchanged.
+
 ## [0.1.1] - 2026-10-02
 
 Public-surface and release-automation hardening. No behavior change to the
