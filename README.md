@@ -74,7 +74,7 @@ ackit-speckit --help
 Pinned install:
 
 ```powershell
-npm install --global @cynrath/ackit-spec-kit-bridge@0.1.1
+npm install --global @cynrath/ackit-spec-kit-bridge@0.1.2
 ```
 
 POSIX shells work identically (`ackit-speckit doctor`, etc.).
@@ -82,8 +82,8 @@ POSIX shells work identically (`ackit-speckit doctor`, etc.).
 ## Prerequisites
 
 - Node.js >= 22, pnpm 11
-- ACKit CLI (`npm install -g @cynrath/agent-context-kit`, tested 0.5.4, min 0.5.0)
-- Spec Kit `specify` CLI (tested 1.0.13, min 1.0.0; Python 3.11+ via `uv tool install specify-cli`)
+- ACKit CLI (`npm install -g @cynrath/agent-context-kit@latest`, tested 0.5.5, min 0.5.0)
+- Spec Kit `specify` CLI (tested 1.4.2, min 1.0.0; Python 3.11+ via `uv tool install specify-cli`)
 - Git, PowerShell 7+ on Windows
 
 `ackit-speckit doctor` checks every prerequisite with stable check IDs and reports `ok`/`fail` per check.
@@ -240,7 +240,7 @@ ackit-speckit verify --profile high-risk
 Native extension (`spec-kit/extension`, id `ackit`):
 
 ```powershell
-specify extension add ackit --dev ./spec-kit/extension
+specify extension add --dev ./spec-kit/extension
 specify extension list
 specify artifact list --json
 ```
@@ -309,13 +309,13 @@ Gate failures exit 1 and fail the pipeline. See [`docs/guides/ci.md`](docs/guide
 
 | Component | Supported / tested |
 |---|---|
-| Node | >= 22 (tested 24.13.0) |
+| Node | >= 22 (22/24 in CI; 26.13.1 locally) |
 | pnpm | 11.22.0 |
-| ACKit | >= 0.5.0 (tested 0.5.4) |
-| Spec Kit (`specify`) | >= 1.0.0 (tested 1.0.13) |
+| ACKit | >= 0.5.0 (tested 0.5.5) |
+| Spec Kit (`specify`) | >= 1.0.0 (tested 1.4.2) |
 | Windows | supported (PowerShell 7+) |
 | Linux (Ubuntu) | supported (CI) |
-| macOS | best-effort (not tested in v0.1.1) |
+| macOS | best-effort (no macOS CI claim) |
 
 Bridge versioning is independent from ACKit and Spec Kit versions (semver). `doctor` reports live compatibility. See [`docs/reference/compatibility.md`](docs/reference/compatibility.md).
 

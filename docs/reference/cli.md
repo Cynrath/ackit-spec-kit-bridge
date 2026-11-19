@@ -1,5 +1,8 @@
 # CLI reference
 
+Doctor uses the portable `.` repository label and reports configuration presence
+without exposing machine-specific absolute paths in JSON or human output.
+
 All commands accept `--help`. Machine-readable commands accept `--json`.
 Global: `ackit-speckit [--root <path>] [--json] <command>`.
 

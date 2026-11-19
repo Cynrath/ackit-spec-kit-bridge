@@ -1,7 +1,7 @@
 ---
 id: "TASK-0014"
 title: "Context7 ownership-ready configuration and Docs7 documentation distribution"
-status: active
+status: pending
 schemaVersion: 2
 dependencies: []
 createdAt: "2026-10-15"
@@ -68,3 +68,10 @@ Revert only newly-added docs/config files; published 0.1.1 is immutable.
 ## Completion notes
 
 PENDING. GitHub connector has no repository CLI execution; direct checkout failed DNS resolution to github.com and pnpm is unavailable in the container. `TASK-0014` was manually allocated after checked `TASK-0013` and is explicitly the fallback from `ackit task create`. No local or hosted release checks can be claimed.
+
+### Scheduling checkpoint 2026-11-19
+
+The current user prioritized version-reference maintenance and explicitly
+requested a bridge npm patch. TASK-0012/TASK-0015 own that separate work.
+This documentation/account task remains pending with its original evidence;
+no ownership, Docs7 production or account action is claimed by the patch.

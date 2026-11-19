@@ -8,7 +8,7 @@ extension in development mode:
 
 ```powershell
 npm install -g @cynrath/ackit-spec-kit-bridge
-specify extension add ackit --dev ./spec-kit/extension
+specify extension add --dev ./spec-kit/extension
 ```
 
 Verify:

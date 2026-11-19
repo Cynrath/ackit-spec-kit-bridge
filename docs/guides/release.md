@@ -63,6 +63,16 @@ disable the Trusted Publisher and never store a write token to avoid it.
 6. Verify: `npm view` latest/dist-tags/shasum, fresh isolated install,
    `ackit-speckit --version` / `--help`, GitHub Release assets + SHA-256.
 
+CI and release jobs install the latest ACKit and Spec Kit once per job. The
+release notes record their actual installed versions; compatibility documentation
+is the last verified snapshot, not a CI version constraint.
+
+npm scans uploaded packages before making them installable. Availability can
+take over 15 minutes; the workflow allows a bounded 30-minute wait and retains
+all latest/version/checksum/fresh-consumer checks. Never republish merely because
+the successful upload is not visible yet. See the
+[npm publish-time scanning announcement](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/).
+
 Rules: never republish or mutate a published version; never move a tag; if
 the version or tag unexpectedly exists, stop and report instead of picking
 another version automatically.

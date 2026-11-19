@@ -4,6 +4,8 @@
 $ErrorActionPreference = "Continue"
 
 $bridge = (Get-Location).Path
+$packageVersion = (Get-Content (Join-Path $bridge "package.json") -Raw | ConvertFrom-Json).version
+$demoDate = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
 $demoId = [guid]::NewGuid().ToString("N").Substring(0, 8)
 $demo = Join-Path ([System.IO.Path]::GetTempPath()) ("bridge-demo-" + $demoId)
 New-Item -ItemType Directory -Path $demo | Out-Null
@@ -102,13 +104,13 @@ verdict: "PASS"
 verifier:
   agent: "release demo (same-session verifier)"
   context: "same"
-  issuedAt: "2026-10-02"
+  issuedAt: "__DEMODATE__"
 findings: []
 checkedCriteria:
   - "AC-001"
   - "AC-002"
 summary: "Demo task verified in clean temp repo."
-'@ -replace "__TASKID__", $taskId
+'@ -replace "__TASKID__", $taskId -replace "__DEMODATE__", $demoDate
 New-Item -ItemType Directory -Force -Path (Join-Path $demo ".ackit/reviews") | Out-Null
 $verdictYaml | Out-File (Join-Path $demo ".ackit/reviews/verdict-demo.yaml") -Encoding utf8
 MustPass (Run "ackit" @("verification", "bundle", $taskId, "--format", "json", "--out", ".ackit/reviews/bundle-demo.json")) "bundle"
@@ -168,11 +170,13 @@ New-Item -ItemType Directory -Force -Path $evidenceDir | Out-Null
 # Sanitize machine-specific paths before preserving: the transcript must not
 # leak user-home, temp-dir, or workspace absolute paths into the repo.
 $txt = Get-Content $log -Raw
+$txt = $txt.Replace($demo.Replace('\', '\\'), "<demo-dir>")
+$txt = $txt.Replace($bridge.Replace('\', '\\'), "<bridge-repo>")
 $txt = $txt -replace [regex]::Escape($demo), "<demo-dir>"
 $txt = $txt -replace [regex]::Escape($bridge), "<bridge-repo>"
 $txt = $txt -replace "C:\\Users\\[^\\\s]+", "<user-home>"
 $txt = $txt -replace "C:/Users/[^/\s]+", "<user-home>"
 $txt = $txt -replace [regex]::Escape($demo.Replace("\", "/")), "<demo-dir>"
 $txt = $txt -replace [regex]::Escape($bridge.Replace("\", "/")), "<bridge-repo>"
-$txt | Out-File (Join-Path $evidenceDir "release-demo-v0.1.0.txt") -Encoding utf8 -NoNewline
+$txt | Out-File (Join-Path $evidenceDir "release-demo-v$packageVersion.txt") -Encoding utf8 -NoNewline
 Write-Host "transcript preserved (sanitized)"
