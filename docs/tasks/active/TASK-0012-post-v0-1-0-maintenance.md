@@ -19,7 +19,7 @@ registries/releases before planning. Historical release evidence stays intact.
 
 ## Scope
 
-- Update current compatibility metadata/docs and CI tool pins; keep supported
+- Update current compatibility metadata/docs and CI's latest-upstream policy; keep supported
   minima ACKit 0.5.0, Spec Kit 1.0.0 and Node 22 unchanged.
 - Couple package/CLI/extension/workflow/current docs to source 0.1.2.
 - Update only Zod to compatible patched 4.6.7 (locked 4.6.5 has confirmed high
@@ -28,6 +28,8 @@ registries/releases before planning. Historical release evidence stays intact.
   30-minute npm processing wait with a 35-minute outer timeout; retain all gates.
 - Validate real current CLIs, packaged CLI, native extension and freshness flow.
   Make the existing demo transcript version-specific so v0.1.0 evidence survives.
+- Correct the observed doctor host-path disclosure with portable root/config
+  labels in human/JSON output; preserve the doctor schema and environment exits.
 
 ## Out of scope
 
@@ -40,6 +42,7 @@ registries/releases before planning. Historical release evidence stays intact.
 - package.json, pnpm-lock.yaml, src/compat.ts, current README/docs/CHANGELOG.
 - spec-kit extension/workflow metadata; CI/security/release tool pins and gates.
 - Focused version/publish-gate contracts; versioned demo script/evidence.
+- src/cli/index.ts doctor presentation and its real executable regression check.
 - specs/002-maintenance-0-1-2/{spec,plan,tasks}.md; task progress/evidence.
 
 ## Required tests
@@ -51,10 +54,11 @@ registries/releases before planning. Historical release evidence stays intact.
 
 ## Acceptance criteria
 
-- [ ] Current references and coupled source versions are consistent; historical
+- [~] Current references and coupled source versions are consistent; historical
   baselines and minimum-supported versions remain correct.
 - [ ] Current real CLI lifecycle, package/extension smokes and full local gates pass.
 - [ ] Production audit has no advisory; registry errors cannot authorize publish.
+- [ ] Doctor output preserves its schema while exposing no machine root/config path.
 - [ ] Evidence and task/spec progress match executed results; TASK-0015 is ready.
 
 ## Test steps
@@ -72,6 +76,11 @@ patch publication through the existing process. Main stays the local working
 branch; a temporary remote PR ref and a merge commit preserve the plan history.
 TASK-0014 is scheduled pending because the current user prioritized maintenance;
 its external documentation/account acceptance is not asserted or bypassed.
+
+The user explicitly requested that CI use the latest ACKit instead of pinning
+0.5.5. ACKit installs/checks therefore use @latest and Spec Kit installs also
+follow latest. Tested-version metadata describes observed validation snapshots,
+not CI constraints; release notes record the tools actually installed in the run.
 
 ## Security and compatibility
 
