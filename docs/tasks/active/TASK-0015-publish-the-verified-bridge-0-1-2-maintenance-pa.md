@@ -1,7 +1,7 @@
 ---
 id: "TASK-0015"
 title: "Publish the verified bridge 0.1.2 maintenance patch"
-status: pending
+status: active
 schemaVersion: 2
 dependencies:
   - "TASK-0012"
@@ -52,7 +52,7 @@ manual deployment or workflow dispatch is authorized by this task.
 
 ## Acceptance criteria
 
-- [ ] Source preparation integrated on main after successful exact-head CI.
+- [~] Source preparation integrated on main after successful exact-head CI.
 - [ ] New immutable tag and npm 0.1.2/latest publication verified.
 - [ ] Fresh installed CLI/SDK and release/archive checksums pass independently.
 - [ ] Task evidence, temporary refs and final main/remote state are truthful.

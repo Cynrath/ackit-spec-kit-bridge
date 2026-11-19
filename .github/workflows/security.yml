@@ -30,7 +30,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level=moderate
       - name: ACKit scan
-        run: npx --yes @cynrath/agent-context-kit@0.5.4 scan --ci
+        run: npx --yes @cynrath/agent-context-kit@latest scan --ci
 
   codeql:
     name: codeql (javascript-typescript)

@@ -3,7 +3,7 @@
 ## Install
 
 ```powershell
-specify extension add ackit --dev ./spec-kit/extension
+specify extension add --dev ./spec-kit/extension
 specify extension list
 specify extension info ackit
 ```
@@ -33,5 +33,5 @@ Each command delegates to the bridge CLI:
 Release archives (`ackit-extension-*.zip`) install identically:
 
 ```powershell
-specify extension add ackit --from ./ackit-extension-v0.1.1.zip
+specify extension add ackit --from https://github.com/Cynrath/ackit-spec-kit-bridge/releases/download/v0.1.2/ackit-extension-v0.1.2.zip
 ```

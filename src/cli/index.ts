@@ -214,7 +214,7 @@ program
         {
           id: "ackit-init",
           ok: ctx.ackit.initialized,
-          detail: ctx.ackit.configPath ?? "ackit.yml missing",
+          detail: ctx.ackit.configPath ? "ACKit config present" : "ackit.yml missing",
         },
         {
           id: "speckit-init",
@@ -257,7 +257,7 @@ program
         schema: "ackit.speckit.doctor.v1",
         version: 1,
         data: {
-          root: r,
+          root: ".",
           bridgeVersion: BRIDGE_VERSION,
           compat,
           checks,

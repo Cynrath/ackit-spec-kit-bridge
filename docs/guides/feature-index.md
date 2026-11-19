@@ -1,4 +1,4 @@
-# ACKit Spec Kit Bridge feature reference (v0.1.1)
+# ACKit Spec Kit Bridge feature reference (v0.1.2)
 
 This index maps the **implemented and tested** bridge capabilities to maintained documentation and CLI commands. GitHub Spec Kit owns specifications; ACKit owns tasks, evidence and verification; the bridge synchronizes their state. This is a community integration, not an official GitHub product.
 

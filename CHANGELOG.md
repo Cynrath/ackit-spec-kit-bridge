@@ -5,11 +5,39 @@ This project follows Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-19
+
+Compatible maintenance update; public schema IDs, supported minima and the
+state-bound lifecycle/completion gates remain unchanged.
+
+### Changed
+
+- Current compatibility metadata and documentation cover ACKit 0.5.5 and Spec
+  Kit 1.4.2; CI follows latest upstream CLIs rather than pinning those snapshots.
+- Package, CLI and native extension/workflow versions are coupled to 0.1.2.
+- Release notes capture actual installed upstream versions. Registry/GitHub
+  lookup failures no longer authorize publication/resume, and npm publish-time
+  processing has a bounded 30-minute verification window.
+- Release demonstration transcripts use the package version, preserving the
+  immutable v0.1.0 transcript instead of overwriting it.
+- Transcript redaction also handles JSON-escaped paths from upstream CLI output.
+- Doctor human/JSON output uses portable repository/config labels instead of
+  disclosing machine-specific absolute paths; its schema and exit codes remain.
+
+### Security
+
+- Updated compatible Zod to 4.6.7, addressing GHSA-mrhx-c7xc-m3w5 in the
+  previously locked 4.6.5 dependency.
+- Applied the Vitest 4.1.12 security backport and provided patched Vite 8.3.3
+  as its development peer, clearing the existing full-audit CI gate while
+  preserving its threshold and the supported major versions.
+
 ### Added
 
 - Context7 repository indexing metadata and optional Docs7 Free documentation
   configuration, plus owner claiming and verification guidance. Existing
-  runtime, npm version, release workflow and GitHub Pages remain unchanged.
+  runtime behavior and existing GitHub Pages hosting remain unchanged by those
+  documentation additions.
 
 ## [0.1.1] - 2026-10-02
 

@@ -1,12 +1,12 @@
 ---
 id: "TASK-0012"
 title: "0.1.2 maintenance: current compatibility and release references"
-status: active
+status: completed
 schemaVersion: 2
 dependencies:
   []
 createdAt: "2026-10-02"
-completedAt: null
+completedAt: 2026-11-19
 ---
 
 
@@ -27,6 +27,9 @@ registries/releases before planning. Historical release evidence stays intact.
 - Clear the existing mandatory full-audit CI gate with compatible Vitest
   4.1.12 and patched Vite 8.3.3 transitive resolution. The current dev chain has
   8 advisories (1 high, 6 moderate, 1 low); keep the audit threshold unchanged.
+  Vite is an explicit development peer provider because pnpm retained vulnerable
+  auto-peer 8.3.1 even after the targeted transitive refresh. No runtime dependency
+  or global tool is added; ^8.3.3 satisfies Vitest's declared peer range.
 - Make registry absence checks fail closed on non-404 errors and allow a bounded
   30-minute npm processing wait with a 35-minute outer timeout; retain all gates.
 - Validate real current CLIs, packaged CLI, native extension and freshness flow.
@@ -57,13 +60,13 @@ registries/releases before planning. Historical release evidence stays intact.
 
 ## Acceptance criteria
 
-- [~] Current references and coupled source versions are consistent; historical
+- [x] Current references and coupled source versions are consistent; historical
   baselines and minimum-supported versions remain correct.
-- [ ] Current real CLI lifecycle, package/extension smokes and full local gates pass.
-- [ ] Production audit has no advisory; registry errors cannot authorize publish.
-- [ ] Existing full dependency-audit CI gate passes after compatible dev patches.
-- [ ] Doctor output preserves its schema while exposing no machine root/config path.
-- [ ] Evidence and task/spec progress match executed results; TASK-0015 is ready.
+- [x] Current real CLI lifecycle, package/extension smokes and full local gates pass.
+- [x] Production audit has no advisory; registry errors cannot authorize publish.
+- [x] Existing full dependency-audit CI gate passes after compatible dev patches.
+- [x] Doctor output preserves its schema while exposing no machine root/config path.
+- [x] Evidence and task/spec progress match executed results; TASK-0015 is ready.
 
 ## Test steps
 
@@ -105,6 +108,32 @@ Before publication, a forward corrective commit/PR. After publication, only a
 new patch may change artifacts; no tag move, force push or immutable overwrite.
 
 ## Completion notes
+
+Source preparation is verified; hosted CI/main integration/publication belong
+to TASK-0015 and are not claimed complete by this preparation task.
+
+- Planning commits 7abfbbc, f319911 and 8e280b9 preceded the respective source,
+  privacy and test-dependency changes. The user's latest-CI preference is recorded.
+- Source package/CLI/extension/workflow/current docs agree on 0.1.2; supported
+  minima and historical v0.1.1 evidence are preserved.
+- Node 26.13.1, pnpm 11.22.0, ACKit 0.5.5 and private Spec Kit 1.4.2 on Windows:
+  frozen install, lint/format/typecheck/build, 6 files / 50 tests, CLI smoke and
+  extension smoke (7 commands/5 hooks) PASS. Actual tarball installation PASS.
+- Seven executable/workflow contracts pass. Old npm/GitHub lookup errors
+  authorized publish/resume (two reproduced failures); corrected gates refuse
+  them. Doctor's host-root disclosure was reproduced, then its portable-output
+  regression passed with unchanged schema/environment exits.
+- Real installed-package/native-extension demo: fresh PASS, successful gate,
+  mutation -> STALE/refused gate, reverify, checkpoint/handoff and normal COMPLETE.
+  Reviewed docs/evidence/release-demo-v0.1.2.txt contains no literal or JSON-escaped
+  machine paths; the v0.1.0 transcript is unchanged.
+- Zod 4.6.7, Vitest 4.1.12 and explicit Vite 8.3.3 dev peer: production AND full
+  audit report ZERO advisories. The existing audit threshold is unchanged.
+- ACKit config/doctor/task doctor/scan CI (95 >= 80), text hygiene and diff
+  checks PASS. No new skipped assertions, runtime dependency, account/permission
+  change or deployment. TASK-0015 owns the remaining hosted/publication gates.
+
+### Initial planning baseline (historical)
 
 Planning checkpoint, before implementation. Baseline installed tools: ACKit
 0.5.5, Spec Kit 1.0.13, Node 26.13.1, pnpm 11.22.0. Current Spec Kit 1.4.2
