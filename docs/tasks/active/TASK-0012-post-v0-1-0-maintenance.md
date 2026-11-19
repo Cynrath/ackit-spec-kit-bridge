@@ -24,6 +24,9 @@ registries/releases before planning. Historical release evidence stays intact.
 - Couple package/CLI/extension/workflow/current docs to source 0.1.2.
 - Update only Zod to compatible patched 4.6.7 (locked 4.6.5 has confirmed high
   advisory GHSA-mrhx-c7xc-m3w5); review lockfile changes.
+- Clear the existing mandatory full-audit CI gate with compatible Vitest
+  4.1.12 and patched Vite 8.3.3 transitive resolution. The current dev chain has
+  8 advisories (1 high, 6 moderate, 1 low); keep the audit threshold unchanged.
 - Make registry absence checks fail closed on non-404 errors and allow a bounded
   30-minute npm processing wait with a 35-minute outer timeout; retain all gates.
 - Validate real current CLIs, packaged CLI, native extension and freshness flow.
@@ -58,6 +61,7 @@ registries/releases before planning. Historical release evidence stays intact.
   baselines and minimum-supported versions remain correct.
 - [ ] Current real CLI lifecycle, package/extension smokes and full local gates pass.
 - [ ] Production audit has no advisory; registry errors cannot authorize publish.
+- [ ] Existing full dependency-audit CI gate passes after compatible dev patches.
 - [ ] Doctor output preserves its schema while exposing no machine root/config path.
 - [ ] Evidence and task/spec progress match executed results; TASK-0015 is ready.
 
